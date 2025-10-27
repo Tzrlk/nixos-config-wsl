@@ -39,28 +39,26 @@
 	}: let
 		inherit (nixpkgs) lib;
 		system = "x86_64-linux";
+		hostname = "nixos";
+		pkgs = nixpkgs.legacyPackages.${system};
 	in {
 
-		devShells.${system}.default = nixos-wsl.devShells.${system}.default;
-
-		nixosConfigurations = {
-
-			ariia = lib.nixosSystem {
-				inherit system;
-				specialArgs = {
-					inherit inputs;
-				};
-				modules = [
-					nixos-wsl.nixosModules.default
-					nixos-wsl.nixosModules.wsl
-					./ariia.nix
-				];
-			};
-
+		devShells.${system} = {
+			nixos-wsl = nixos-wsl.devShells.${system}.default;
+			default   = import ./shell.nix { inherit pkgs; };
 		};
 
-		packages.${system} = nixos-wsl.packages.${system};
-		checks.${system} = nixos-wsl.checks.${system};
+		nixosConfigurations.${hostname} = lib.nixosSystem {
+			inherit system;
+			specialArgs = {
+				inherit inputs self;
+			};
+			modules = [
+				nixos-wsl.nixosModules.default
+				nixos-wsl.nixosModules.wsl
+				./ariia.nix
+			];
+		};
 
 	};
 }
