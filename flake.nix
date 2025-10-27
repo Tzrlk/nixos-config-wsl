@@ -1,17 +1,6 @@
 {
 	description = "Personal system config for NixOS in WSL";
 
-	nixConfig = {
-		accept-flake-config = true;
-		allowed-users = [ "@wheel" ];
-		auto-optimise-store = true;
-		use-xdg-base-directories = true;
-		extra-experimenal-features = [
-			"flakes"
-			"nix-command"
-		];
-	};
-
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
@@ -40,6 +29,7 @@
 	outputs = inputs @ {
 		self,
 		nixpkgs,
+		flake-utils,
 		nixos-wsl,
 		config-home,
 		...
@@ -62,7 +52,8 @@
 		nixosConfigurations.${hostname} = lib.nixosSystem {
 			inherit system;
 			specialArgs = {
-				inherit inputs self;
+				inherit self;
+				inherit inputs;
 			};
 			modules = [
 				nixos-wsl.nixosModules.default
