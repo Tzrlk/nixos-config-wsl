@@ -35,8 +35,8 @@
 		...
 	}: let
 		inherit (nixpkgs) lib;
-		locals   = if (builtins.pathExists ./locals.nix)
-		           then (import ./locals.nix)
+		locals   = if builtins.pathExists ./locals.nix
+		           then import ./locals.nix
 		           else {};
 		system   = locals.system   or "x86_64-linux";
 		hostname = locals.hostname or "nixos";
@@ -55,7 +55,10 @@
 				inherit self;
 				inherit inputs;
 			};
-			modules = [
+			modules = []
+			++ lib.optional (builtins.pathExists ./hardware-configuration.nix) ./hardware-configuration.nix
+			++ lib.optional (builtins.pathExists ./configuration.nix) ./configuration.nix
+			++ [
 				nixos-wsl.nixosModules.default
 				nixos-wsl.nixosModules.wsl
 				./system.nix
