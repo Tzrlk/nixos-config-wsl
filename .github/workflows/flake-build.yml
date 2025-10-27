@@ -13,12 +13,12 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@v4
-  
+
       - name: prepare-storage
         uses: wimpysworld/nothing-but-nix@main
         with:
           hatchet-protocol: holster
-  
+
       - name: prepare-nix
         uses: DeterminateSystems/nix-installer-action@main
 
@@ -35,4 +35,4 @@ jobs:
         run:  nix flake check
 
       - name: build-flake
-        run:  nix build . --no-write-lock-file
+        run:  nix build '.#nixosConfigurations.nixos.config.system.build.toplevel' --no-write-lock-file

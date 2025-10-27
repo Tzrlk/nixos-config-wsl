@@ -4,5 +4,6 @@
 *.log
 
 # NixOS
+result
 configuration.nix
 hardware-configuration.nix
