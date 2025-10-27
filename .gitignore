@@ -1,0 +1,8 @@
+# Misc
+*.bak
+*.jsonl
+*.log
+
+# NixOS
+configuration.nix
+hardware-configuration.nix
