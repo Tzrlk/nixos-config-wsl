@@ -1,5 +1,5 @@
 {
-	description = "NixOS WSL";
+	description = "Personal system config for NixOS in WSL";
 
 	nixConfig = {
 		accept-flake-config = true;
@@ -24,24 +24,35 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
-		nix-direnv = {
-			url = "github:nix-community/nix-direnv";
+		home-manager = {
+			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
+
+		config-home = {
+			url = "github:Tzrlk/nixos-config-user";
+			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.home-manager.follows = "home-manager";
+		};
+
 	};
 
 	outputs = inputs @ {
 		self,
 		nixpkgs,
 		nixos-wsl,
+		config-home,
 		...
 	}: let
 		inherit (nixpkgs) lib;
-		system = "x86_64-linux";
-		hostname = "nixos";
-		pkgs = nixpkgs.legacyPackages.${system};
+		locals   = if (builtins.pathExists ./locals.nix)
+		           then (import ./locals.nix)
+		           else {};
+		system   = locals.system   or "x86_64-linux";
+		hostname = locals.hostname or "nixos";
+		pkgs     = nixpkgs.legacyPackages.${system};
 	in {
+		inherit (config-home) homeConfigurations;
 
 		devShells.${system} = {
 			nixos-wsl = nixos-wsl.devShells.${system}.default;
@@ -57,7 +68,6 @@
 				nixos-wsl.nixosModules.default
 				nixos-wsl.nixosModules.wsl
 				./ariia.nix
-				./programs/direnv
 			];
 		};
 
