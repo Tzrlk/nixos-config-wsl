@@ -58,7 +58,7 @@
 			modules = [
 				nixos-wsl.nixosModules.default
 				nixos-wsl.nixosModules.wsl
-				./ariia.nix
+				./system.nix
 			];
 		};
 
