@@ -1,7 +1,9 @@
-{ pkgs }: with pkgs; mkShell {
+{ self, inputs, pkgs, ... }: pkgs.mkShell {
 
 	buildInputs = [
-		nixpkgs-fmt
+		self
+		inputs
+		pkgs
 	];
 
 	shellHook = ''
