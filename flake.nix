@@ -102,6 +102,7 @@
 				interop        = import ./modules/interop.nix;
 				network        = import ./modules/network.nix;
 				settings       = import ./modules/settings.nix;
+				tools          = import ./modules/tools.nix;
 			};
 
 			overlays = {

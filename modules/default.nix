@@ -6,5 +6,6 @@
 		./interop.nix
 		./network.nix
 		./settings.nix
+		./tools.nix
 	];
 }
